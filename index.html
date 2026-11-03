@@ -13,54 +13,84 @@
 
     <style>
         :root {
-            --bg-main: #14161f;
-            --bg-card: #242730;
-            --accent-pink: #ff3b70;
-            --accent-purple: #a855f7;
+            --bg-main: #0d0f17;
+            --bg-card: #181b26;
+            --bg-card-hover: #212536;
+            --accent-pink: #ff2d55;
+            --accent-purple: #af52de;
+            --accent-glow: rgba(255, 45, 85, 0.25);
             --text-main: #ffffff;
-            --text-muted: #9ca3af;
+            --text-muted: #8e8e93;
+            --border-color: rgba(255, 255, 255, 0.08);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            padding-bottom: 90px;
+            padding-bottom: 100px;
             user-select: none;
+            overflow-x: hidden;
         }
 
-        /* Container & Tabs Layout */
+        /* Dynamic Header */
         .header {
-            padding: 20px 20px 10px;
-            padding-top: calc(20px + env(safe-area-inset-top));
+            padding: 24px 20px 12px;
+            padding-top: calc(24px + env(safe-area-inset-top));
+            background: linear-gradient(180deg, rgba(13,15,23,0.9) 0%, rgba(13,15,23,0) 100%);
         }
 
-        .header h5 { color: var(--accent-pink); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }
-        .header h1 { font-size: 24px; font-weight: 700; margin-top: 4px; }
+        .header h5 { 
+            color: var(--accent-pink); 
+            font-size: 12px; 
+            font-weight: 700;
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+        }
 
-        .tab-content { display: none; padding: 0 16px; }
-        .tab-content.active { display: block; }
+        .header h1 { 
+            font-size: 26px; 
+            font-weight: 800; 
+            margin-top: 2px;
+            letter-spacing: -0.5px;
+        }
 
-        /* Bottom Nav */
+        /* Tab Content & Smooth Animations */
+        .tab-content { 
+            display: none; 
+            padding: 0 16px; 
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .tab-content.active { 
+            display: block; 
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Bottom Navigation Bar */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: calc(65px + env(safe-area-inset-bottom));
-            background: rgba(36, 39, 48, 0.95);
-            backdrop-filter: blur(10px);
+            height: calc(68px + env(safe-area-inset-bottom));
+            background: rgba(24, 27, 38, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--border-color);
             padding-bottom: env(safe-area-inset-bottom);
             z-index: 1000;
         }
@@ -71,49 +101,65 @@
             align-items: center;
             color: var(--text-muted);
             font-size: 11px;
+            font-weight: 500;
             text-decoration: none;
-            gap: 4px;
+            gap: 5px;
             cursor: pointer;
+            transition: all 0.2s ease;
+            width: 33%;
         }
 
-        .nav-item.active { color: var(--accent-pink); }
-        .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
+        .nav-item.active { 
+            color: var(--accent-pink); 
+            transform: translateY(-2px);
+        }
+
+        .nav-item svg { 
+            width: 24px; 
+            height: 24px; 
+            fill: currentColor;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-item:active svg { transform: scale(0.85); }
 
         /* Dashboard Ring */
         .ring-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 20px 0;
+            margin: 24px 0;
             position: relative;
         }
 
-        .ring-svg { transform: rotate(-90deg); width: 240px; height: 240px; }
-        .ring-bg { stroke: rgba(255, 255, 255, 0.08); stroke-width: 18; fill: none; }
+        .ring-svg { transform: rotate(-90deg); width: 250px; height: 250px; }
+        .ring-bg { stroke: rgba(255, 255, 255, 0.05); stroke-width: 16; fill: none; }
         .ring-progress {
             stroke: url(#gradient);
-            stroke-width: 18;
+            stroke-width: 16;
             fill: none;
             stroke-linecap: round;
-            stroke-dasharray: 628;
-            stroke-dashoffset: 628;
-            transition: stroke-dashoffset 1s ease-in-out;
+            stroke-dasharray: 660;
+            stroke-dashoffset: 660;
+            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .ring-text {
             position: absolute;
             text-align: center;
         }
-        .ring-text span { display: block; color: var(--text-muted); font-size: 13px; }
-        .ring-text h2 { font-size: 38px; font-weight: 800; margin: 4px 0; }
-        .ring-text small { color: var(--accent-pink); font-size: 12px; font-weight: 600; }
+        .ring-text span { display: block; color: var(--text-muted); font-size: 13px; font-weight: 500; }
+        .ring-text h2 { font-size: 40px; font-weight: 800; margin: 2px 0; letter-spacing: -1px; }
+        .ring-text small { color: var(--accent-pink); font-size: 13px; font-weight: 600; }
 
-        /* Card Component */
+        /* Modern Card Component */
         .card {
             background-color: var(--bg-card);
-            border-radius: 18px;
-            padding: 18px;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
             margin-bottom: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
         .card-header {
@@ -124,88 +170,146 @@
         }
 
         .badge {
-            background: rgba(255, 59, 112, 0.2);
+            background: rgba(255, 45, 85, 0.15);
             color: var(--accent-pink);
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
-        .advice-title { color: #fce7f3; font-weight: 700; margin-bottom: 6px; font-size: 14px; }
-        .advice-body { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
+        .advice-title { color: #fce7f3; font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+        .advice-body { color: var(--text-muted); font-size: 14px; line-height: 1.6; }
 
-        /* Forms */
+        /* Form Controls */
         .form-group { margin-bottom: 16px; }
+        .form-group:last-child { margin-bottom: 0; }
         .form-group label { display: block; font-size: 14px; font-weight: 600; color: var(--accent-pink); margin-bottom: 8px; }
+        
         .form-control {
             width: 100%;
-            padding: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
             color: white;
             font-size: 15px;
             outline: none;
+            transition: border-color 0.2s;
         }
 
-        /* Chips Grid */
+        .form-control:focus {
+            border-color: var(--accent-pink);
+        }
+
+        /* Interactive Symptom Chips */
         .chips-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
             gap: 10px;
         }
 
         .chip {
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
+            padding: 12px 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
             font-size: 13px;
             color: var(--text-muted);
             text-align: center;
             cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        .chip:active { transform: scale(0.95); }
 
         .chip.selected {
-            background: rgba(255, 59, 112, 0.2);
+            background: rgba(255, 45, 85, 0.18);
             border-color: var(--accent-pink);
-            color: var(--accent-pink);
+            color: var(--text-main);
             font-weight: 600;
+            box-shadow: 0 0 12px var(--accent-glow);
         }
 
+        /* Buttons */
         .btn-submit {
             width: 100%;
             padding: 16px;
             background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
             border: none;
-            border-radius: 14px;
+            border-radius: 16px;
             color: white;
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 59, 112, 0.3);
-            margin-top: 10px;
+            box-shadow: 0 6px 20px var(--accent-glow);
+            transition: transform 0.15s ease, opacity 0.15s ease;
         }
 
-        /* History List */
+        .btn-submit:active { transform: scale(0.97); opacity: 0.9; }
+
+        .btn-cancel {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            display: none;
+        }
+
+        /* History List & Actions */
         .history-item {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            padding: 14px 0;
         }
         .history-item:last-child { border-bottom: none; }
-        .history-date { font-weight: 600; margin-bottom: 6px; display: flex; justify-content: space-between; }
+        
+        .history-date { 
+            font-weight: 700; 
+            font-size: 15px;
+            margin-bottom: 6px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-action {
+            background: none;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-action:active { opacity: 0.6; }
+        .btn-edit { color: #38bdf8; }
+        .btn-delete { color: #ef4444; }
+
         .symptom-tag {
             display: inline-block;
-            background: rgba(255, 59, 112, 0.15);
+            background: rgba(255, 45, 85, 0.15);
             color: var(--accent-pink);
             font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 6px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 8px;
             margin-right: 4px;
             margin-top: 4px;
         }
-        .btn-delete { color: #ef4444; background: none; border: none; font-size: 12px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -221,12 +325,12 @@
             <svg class="ring-svg">
                 <defs>
                     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#ff3b70" />
-                        <stop offset="100%" stop-color="#a855f7" />
+                        <stop offset="0%" stop-color="#ff2d55" />
+                        <stop offset="100%" stop-color="#af52de" />
                     </linearGradient>
                 </defs>
-                <circle class="ring-bg" cx="120" cy="120" r="100"></circle>
-                <circle class="ring-progress" id="progress-circle" cx="120" cy="120" r="100"></circle>
+                <circle class="ring-bg" cx="125" cy="125" r="105"></circle>
+                <circle class="ring-progress" id="progress-circle" cx="125" cy="125" r="105"></circle>
             </svg>
             <div class="ring-text">
                 <span>คาดการณ์ประจำเดือน</span>
@@ -245,7 +349,7 @@
         </div>
     </div>
 
-    <!-- 2. LOG TAB -->
+    <!-- 2. LOG TAB (บันทึก / แก้ไข) -->
     <div id="tab-log" class="tab-content">
         <div class="card">
             <div class="form-group">
@@ -280,7 +384,8 @@
             </div>
         </div>
 
-        <button class="btn-submit" onclick="saveLog()">บันทึกข้อมูลรอบเดือน</button>
+        <button class="btn-submit" id="btn-submit-log" onclick="saveLog()">บันทึกข้อมูลรอบเดือน</button>
+        <button class="btn-cancel" id="btn-cancel-edit" onclick="resetForm()">ยกเลิกการแก้ไข</button>
     </div>
 
     <!-- 3. HISTORY TAB -->
@@ -288,11 +393,11 @@
         <div style="display: flex; gap: 12px; margin-bottom: 16px;">
             <div class="card" style="flex: 1; text-align: center; margin-bottom: 0;">
                 <span style="font-size: 12px; color: var(--text-muted);">รอบเฉลี่ย</span>
-                <h2 style="color: var(--accent-pink);" id="avg-days">28 วัน</h2>
+                <h2 style="color: var(--accent-pink); margin-top: 4px;" id="avg-days">28 วัน</h2>
             </div>
             <div class="card" style="flex: 1; text-align: center; margin-bottom: 0;">
                 <span style="font-size: 12px; color: var(--text-muted);">บันทึกทั้งหมด</span>
-                <h2 style="color: var(--accent-purple);" id="total-logs">0 ครั้ง</h2>
+                <h2 style="color: var(--accent-purple); margin-top: 4px;" id="total-logs">0 ครั้ง</h2>
             </div>
         </div>
 
@@ -307,7 +412,7 @@
             <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
             แดชบอร์ด
         </div>
-        <div class="nav-item" onclick="switchTab('log', 'บันทึกอาการแฟน', this)">
+        <div class="nav-item" id="nav-log-btn" onclick="switchTab('log', 'บันทึกอาการแฟน', this)">
             <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
             บันทึกอาการ
         </div>
@@ -318,8 +423,9 @@
     </nav>
 
     <script>
-        // Data State Management
+        // LocalStorage State Management
         let logs = JSON.parse(localStorage.getItem('gf_period_logs')) || [];
+        let editingLogId = null;
 
         const phaseAdvices = {
             menstrual: "แฟนอาจปวดท้องและเหนื่อยง่าย ควรเตรียมกระเป๋าน้ำร้อน เครื่องดื่มอุ่นๆ คอยเอาใจใส่เป็นพิเศษ และอย่าลืมโอ๋เธอเยอะๆ",
@@ -328,14 +434,14 @@
             luteal: "เข้าสู่ช่วง PMS! อาจหงุดหงิดง่าย อยากของหวาน หรือนอยด์โดยไม่มีสาเหตุ ควรใจเย็น อดทน และสปอยล์ด้วยขนมโปรดของเธอ"
         };
 
-        // Initialize default input date
         document.getElementById('start-date').valueAsDate = new Date();
 
         function switchTab(tabId, title, navEl) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             
-            document.getElementById(`tab-${tabId}`).classList.add('active');
+            const target = document.getElementById(`tab-${tabId}`);
+            target.classList.add('active');
             navEl.classList.add('active');
             document.getElementById('page-title').innerText = title;
 
@@ -364,7 +470,9 @@
         function updateDashboard() {
             if (logs.length === 0) {
                 document.getElementById('days-count').innerText = "ยังไม่มีข้อมูล";
+                document.getElementById('next-date-str').innerText = "กดบันทึกข้อมูลแรกได้เลย";
                 document.getElementById('phase-advice').innerText = "กรุณากดบันทึกรอบเดือนแรกที่เมนู 'บันทึกอาการ'";
+                document.getElementById('progress-circle').style.strokeDashoffset = 660;
                 return;
             }
 
@@ -387,7 +495,7 @@
 
             // Ring offset calculation
             let ratio = Math.min(1, Math.max(0, daysPassed / avgDays));
-            let offset = 628 - (628 * ratio);
+            let offset = 660 - (660 * ratio);
             document.getElementById('progress-circle').style.strokeDashoffset = offset;
 
             // Phase detection
@@ -414,23 +522,76 @@
             let selectedSymptoms = [];
             document.querySelectorAll('.chip.selected').forEach(c => selectedSymptoms.push(c.innerText));
 
-            let newLog = {
-                id: Date.now(),
-                startDate: startVal,
-                endDate: endVal || null,
-                symptoms: selectedSymptoms,
-                note: noteVal
-            };
+            if (editingLogId !== null) {
+                // Update Existing Log
+                let idx = logs.findIndex(l => l.id === editingLogId);
+                if (idx !== -1) {
+                    logs[idx] = {
+                        id: editingLogId,
+                        startDate: startVal,
+                        endDate: endVal || null,
+                        symptoms: selectedSymptoms,
+                        note: noteVal
+                    };
+                }
+                alert('อัปเดตข้อมูลแก้ไขเรียบร้อยแล้ว!');
+            } else {
+                // Create New Log
+                let newLog = {
+                    id: Date.now(),
+                    startDate: startVal,
+                    endDate: endVal || null,
+                    symptoms: selectedSymptoms,
+                    note: noteVal
+                };
+                logs.push(newLog);
+                alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
+            }
 
-            logs.push(newLog);
+            // Save to LocalStorage
             localStorage.setItem('gf_period_logs', JSON.stringify(logs));
 
-            // Reset form
-            document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-            document.getElementById('note-input').value = '';
-            
-            alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
+            resetForm();
             switchTab('home', 'แดชบอร์ดติดตามแฟน', document.querySelectorAll('.nav-item')[0]);
+        }
+
+        function editLog(id) {
+            let targetLog = logs.find(l => l.id === id);
+            if (!targetLog) return;
+
+            editingLogId = id;
+
+            // Populate Form Fields
+            document.getElementById('start-date').value = targetLog.startDate;
+            document.getElementById('end-date').value = targetLog.endDate || '';
+            document.getElementById('note-input').value = targetLog.note || '';
+
+            // Set Selected Symptoms Chips
+            document.querySelectorAll('.chip').forEach(chip => {
+                if (targetLog.symptoms.includes(chip.innerText)) {
+                    chip.classList.add('selected');
+                } else {
+                    chip.classList.remove('selected');
+                }
+            });
+
+            // UI Adjustments for Editing Mode
+            document.getElementById('btn-submit-log').innerText = 'บันทึกการแก้ไขข้อมูล';
+            document.getElementById('btn-cancel-edit').style.display = 'block';
+
+            // Switch to Log Tab
+            switchTab('log', 'แก้ไขข้อมูลรอบเดือน', document.getElementById('nav-log-btn'));
+        }
+
+        function resetForm() {
+            editingLogId = null;
+            document.getElementById('start-date').valueAsDate = new Date();
+            document.getElementById('end-date').value = '';
+            document.getElementById('note-input').value = '';
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+            
+            document.getElementById('btn-submit-log').innerText = 'บันทึกข้อมูลรอบเดือน';
+            document.getElementById('btn-cancel-edit').style.display = 'none';
         }
 
         function updateHistory() {
@@ -452,13 +613,16 @@
                 let eDate = log.endDate ? ' - ' + new Date(log.endDate).toLocaleDateString('th-TH', { month: 'short', day: 'numeric' }) : '';
                 
                 let tags = log.symptoms.map(s => `<span class="symptom-tag">${s}</span>`).join('');
-                let note = log.note ? `<div style="font-size:12px; color: var(--text-muted); margin-top:4px;">📝 ${log.note}</div>` : '';
+                let note = log.note ? `<div style="font-size:13px; color: var(--text-muted); margin-top:6px;">📝 ${log.note}</div>` : '';
 
                 html += `
                     <div class="history-item">
                         <div class="history-date">
                             <span>📅 ${sDate}${eDate}</span>
-                            <button class="btn-delete" onclick="deleteLog(${log.id})">ลบ</button>
+                            <div class="history-actions">
+                                <button class="btn-action btn-edit" onclick="editLog(${log.id})">แก้ไข</button>
+                                <button class="btn-action btn-delete" onclick="deleteLog(${log.id})">ลบ</button>
+                            </div>
                         </div>
                         <div>${tags}</div>
                         ${note}
@@ -474,10 +638,11 @@
                 logs = logs.filter(l => l.id !== id);
                 localStorage.setItem('gf_period_logs', JSON.stringify(logs));
                 updateHistory();
+                updateDashboard();
             }
         }
 
-        // Init App
+        // Initialize App
         updateDashboard();
     </script>
 </body>
